@@ -21,4 +21,7 @@ const NotesSchema = new Schema({
   },
 });
 
-export default mongoose.model('notes', NotesSchema);
+const Notes = mongoose.model('notes', NotesSchema);
+Notes.createIndexes();
+
+export default Notes;

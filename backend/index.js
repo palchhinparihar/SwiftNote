@@ -9,6 +9,9 @@ const port = 3000;
 
 connectToMongo();
 
+// Middleware
+app.use(express.json());
+
 app.get('/', (req, res) => {
     res.send('Hello main page!');
 });
