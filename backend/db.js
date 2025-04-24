@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const mongoURI = "mongodb://localhost:27017/swiftNoteDb";
+const mongoURI = "mongodb://localhost:27017/swiftNote";
 
 const connectToMongo = async () => {
     try {
