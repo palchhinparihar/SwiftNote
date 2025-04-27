@@ -3,6 +3,7 @@ import { body, validationResult } from 'express-validator';
 import User from "../models/User.js";
 import bcrypt from "bcryptjs";
 import jwt from 'jsonwebtoken';
+import fetchuser from "../middleware/fetchuser.js";
 
 const router = express.Router();
 const JWT_SECRET = "1#P5Qah9m0";
@@ -43,14 +44,14 @@ router.post('/createuser', checkers, async (req, res) => {
     });
 
     // Prepare payload for JWT
-    const data = {
+    const payloadData = {
       user: {
         id: user.id
       }
     };
 
     // Generate auth token
-    const authToken = jwt.sign(data, JWT_SECRET);
+    const authToken = jwt.sign(payloadData, JWT_SECRET);
 
     res.json({ authToken });
   } catch (err) {
@@ -91,16 +92,30 @@ router.post('/login', checkers, async (req, res) => {
     }
 
     // Prepare payload for JWT
-    const data = {
+    const payloadData = {
       user: {
         id: user.id
       }
     };
 
     // Generate auth token
-    const authToken = jwt.sign(data, JWT_SECRET);
+    const authToken = jwt.sign(payloadData, JWT_SECRET);
 
     res.json({ authToken });
+  } catch (err) {
+    // Catch the error
+    console.log(err.message);
+    res.status(500).json({ error: 'Interal Server Error', message: err.message });
+  }
+});
+
+// ROUTE 3: POST /api/auth/getuser
+// Desc: Get user's details via the jwt token
+router.post('/getuser', fetchuser, async (req, res) => {
+  try {
+    // Fetch the user's details except password using the id
+    const user = await User.findById(req.user.id).select("-password");
+    res.send(user);
   } catch (err) {
     // Catch the error
     console.log(err.message);
