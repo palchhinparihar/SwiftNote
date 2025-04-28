@@ -16,7 +16,7 @@ let checkers = [
 ];
 
 // ROUTE 1: POST /api/auth/createuser
-// Desc: Create a new user
+// Desc: Create a new user (No login required)
 router.post('/createuser', checkers, async (req, res) => {
   // Check if there are any errors or not
   const errors = validationResult(req);
@@ -67,7 +67,7 @@ checkers = [
 ];
 
 // ROUTE 2: POST /api/auth/login
-// Desc: Login a user
+// Desc: Login a user (No login required)
 router.post('/login', checkers, async (req, res) => {
   // Check if there are any errors or not
   const errors = validationResult(req);
@@ -110,7 +110,7 @@ router.post('/login', checkers, async (req, res) => {
 });
 
 // ROUTE 3: POST /api/auth/getuser
-// Desc: Get user's details via the jwt token
+// Desc: Get loggedIn user's details via the jwt token (Login required)
 router.post('/getuser', fetchuser, async (req, res) => {
   try {
     // Fetch the user's details except password using the id

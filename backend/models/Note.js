@@ -3,6 +3,10 @@ import mongoose from "mongoose";
 const { Schema } = mongoose;
 
 const NotesSchema = new Schema({
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'user'
+  },
   title: {
     type: String,
     required: true
@@ -21,7 +25,6 @@ const NotesSchema = new Schema({
   },
 });
 
-const Notes = mongoose.model('notes', NotesSchema);
-Notes.createIndexes();
+const Note = mongoose.model('notes', NotesSchema);
 
-export default Notes;
+export default Note;
