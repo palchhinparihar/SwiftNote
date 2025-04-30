@@ -50,4 +50,38 @@ router.post('/addnote', fetchuser, checkers, async (req, res) => {
   }
 });
 
+// ROUTE 3: PUT /api/notes/updatenote/:id
+// Desc: Update an existing note (Login required)
+router.put('/updatenote/:id', fetchuser, async (req, res) => {
+  try {
+    const { title, description, tag } = req.body;
+
+    // Build newNote object with updated fields
+    const newNote = {};
+    if (title) newNote.title = title;
+    if (description) newNote.description = description;
+    if (tag) newNote.tag = tag;
+
+    // Find the note to be updated
+    let note = await Note.findById(req.params.id);
+    if (!note) {
+      return res.status(404).send("Not Found!");
+    }
+
+    // Check if the current user owns the note
+    if (note.user.toString() !== req.user.id) {
+      return res.status(401).send("Not Allowed!");
+    }
+
+    // Update the note and return the updated document
+    note = await Note.findByIdAndUpdate(req.params.id, { $set: newNote }, { new: true });
+    res.json({note});
+  } catch (err) {
+    // Handle server errors
+    console.log(err.message);
+    res.status(500).json({ error: 'Internal Server Error', message: err.message });
+  }
+});
+
+
 export default router;
