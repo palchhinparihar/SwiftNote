@@ -35,8 +35,9 @@ router.post('/addnote', fetchuser, checkers, async (req, res) => {
     return res.status(400).json({ errors: errors.array() });
   }
   
+  const { title, description, tag } = req.body;
+
   try {
-    const { title, description, tag } = req.body;
     const note = new Note({
       user: req.user.id, title, description, tag
     });
@@ -53,9 +54,9 @@ router.post('/addnote', fetchuser, checkers, async (req, res) => {
 // ROUTE 3: PUT /api/notes/updatenote/:id
 // Desc: Update an existing note (Login required)
 router.put('/updatenote/:id', fetchuser, async (req, res) => {
-  try {
-    const { title, description, tag } = req.body;
+  const { title, description, tag } = req.body;
 
+  try {
     // Build newNote object with updated fields
     const newNote = {};
     if (title) newNote.title = title;
@@ -75,7 +76,7 @@ router.put('/updatenote/:id', fetchuser, async (req, res) => {
 
     // Update the note and return the updated document
     note = await Note.findByIdAndUpdate(req.params.id, { $set: newNote }, { new: true });
-    res.json({note});
+    res.json({ note });
   } catch (err) {
     // Handle server errors
     console.log(err.message);
@@ -83,5 +84,29 @@ router.put('/updatenote/:id', fetchuser, async (req, res) => {
   }
 });
 
+// ROUTE 3: DELETE /api/notes/deletenote/:id
+// Desc: Delete an existing note (Login required)
+router.delete('/deletenote/:id', fetchuser, async (req, res) => {
+  try {
+    // Find the note to be deleted
+    let note = await Note.findById(req.params.id);
+    if (!note) {
+      return res.status(404).send("Not Found!");
+    }
+
+    // Check if the current user owns the note
+    if (note.user.toString() !== req.user.id) {
+      return res.status(401).send("Not Allowed!");
+    }
+
+    // Delete the note
+    note = await Note.findByIdAndDelete(req.params.id);
+    res.json({ "Success" : "Given Note has been deleted successfully!", note: note });
+  } catch (err) {
+    // Handle server errors
+    console.log(err.message);
+    res.status(500).json({ error: 'Internal Server Error', message: err.message });
+  }
+});
 
 export default router;
