@@ -12,10 +12,12 @@ function App() {
         <Router>
           <Navbar title="SwiftNote" />
 
-          <Routes>
-            <Route exact path="/" element={<Home />} />
-            <Route exact path="/about" element={<About />} />
-          </Routes>
+          <main className="container">
+            <Routes>
+              <Route exact path="/" element={<Home />} />
+              <Route exact path="/about" element={<About />} />
+            </Routes>
+          </main>
         </Router>
       </NoteState>
     </>
