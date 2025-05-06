@@ -1,4 +1,5 @@
 import express from "express";
+import cors from "cors";
 
 import connectToMongo from "./db.js";
 import authRoutes from './routes/auth.js';
@@ -8,6 +9,9 @@ const app = express();
 const port = 5000;
 
 connectToMongo();
+
+// Enable all CORS requests
+app.use(cors())
 
 // Middleware
 app.use(express.json());
