@@ -4,7 +4,7 @@ import NoteContext from '../context/notes/NoteContext';
 const NoteItem = (props) => {
   const context = useContext(NoteContext);
   const { deleteNote } = context;
-  const { note } = props;
+  const { note, updateNote } = props;
 
   const handleDelete = () => {
     deleteNote(note._id);
@@ -19,8 +19,8 @@ const NoteItem = (props) => {
             <h5 className="card-title fw-bold">{note.title}</h5>
 
             <div className="d-flex gap-2">
-              <i className="fa-solid fa-pen-to-square" style={{ color: "#1374be" }} onClick={handleDelete}></i>
-              <i className="fa-solid fa-trash" style={{ color: "#F74B4B" }}></i>
+              <i className="fa-solid fa-pen-to-square" style={{ color: "#1374be" }} onClick={() => { updateNote(note) }}></i>
+              <i className="fa-solid fa-trash" style={{ color: "#F74B4B" }} onClick={handleDelete}></i>
             </div>
           </div>
 
