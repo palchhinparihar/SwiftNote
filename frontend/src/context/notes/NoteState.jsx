@@ -21,6 +21,17 @@ const NoteState = (props) => {
 
   // Add a note
   const addNote = async (title, description, tag) => {
+    // Frontend validation before sending the request to the backend
+    if (!title.trim() || !description.trim()) {
+      alert("Title and description are required!");
+      return; // Prevent sending a blank note
+    }
+
+    if (title.length < 5 || description.length < 5) {
+      alert("Both title and description must be at least 5 characters long.");
+      return;
+    }    
+
     // Add the note in the backend
     const response = await fetch(`${host}/api/notes/addnote`, {
       method: 'POST',
@@ -28,7 +39,7 @@ const NoteState = (props) => {
         'Content-Type': 'application/json',
         "auth-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjgwYjE2NjZmMmJhMjI1NWYzY2JhOTJiIn0sImlhdCI6MTc0NTcyNzk0M30.W8pgEEctU42gTMDR9P62qesGKmNq-4TiDnFpurFpez8"
       },
-      body: JSON.stringify({title, description, tag})
+      body: JSON.stringify({ title, description, tag })
     });
     const data = await response.json();
 

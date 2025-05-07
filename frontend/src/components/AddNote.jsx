@@ -5,7 +5,7 @@ const AddNote = () => {
   const context = useContext(NoteContext);
   const { addNote } = context;
 
-  const [note, setNote] = useState({ title: "", description: "", tag: "general" });
+  const [note, setNote] = useState({ title: "", description: "", tag: "General" });
 
   const onChange = (e) => {
     setNote({ ...note, [e.target.name]: e.target.value });
