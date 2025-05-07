@@ -8,7 +8,7 @@ const AddNote = () => {
   const [note, setNote] = useState({ title: "", description: "", tag: "general" });
 
   const onChange = (e) => {
-    setNote({ ...note, [e.target.name]: [e.target.value] });
+    setNote({ ...note, [e.target.name]: e.target.value });
   }
 
   const handleSubmit = (e) => {
