@@ -4,18 +4,18 @@ import NoteItem from './NoteItem';
 
 const Notes = () => {
   const context = useContext(NoteContext);
-  const { notes, getAllNotes } = context;
+  const { notes, getAllNotes, editNote } = context;
 
   useEffect(() => {
     getAllNotes();
   }, []);
 
   const ref = useRef();
-  const [note, setNote] = useState({ etitle: "", edescription: "", etag: "general" });
+  const [note, setNote] = useState({ id: "", etitle: "", edescription: "", etag: "general" });
 
   const updateNote = (currentNote) => {
     ref.current.click();
-    setNote({ etitle: currentNote.title, edescription: currentNote.description, etag: currentNote.tag });
+    setNote({ id: currentNote._id, etitle: currentNote.title, edescription: currentNote.description, etag: currentNote.tag });
   }
 
   const onChange = (e) => {
@@ -23,7 +23,7 @@ const Notes = () => {
   }
 
   const handleSubmit = (e) => {
-    e.preventDefault();
+    editNote(note.id, note.etitle, note.edescription, note.etag);
   }
 
   return (
@@ -54,7 +54,7 @@ const Notes = () => {
             </div>
             <div className="modal-footer">
               <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-              <button type="button" className="btn btn-primary" onClick={handleSubmit}>Update Note</button>
+              <button type="button" className="btn btn-primary" data-bs-dismiss="modal" onClick={handleSubmit}>Update Note</button>
             </div>
           </div>
         </div>

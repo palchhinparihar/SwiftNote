@@ -57,8 +57,6 @@ const NoteState = (props) => {
         "auth-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjgwYjE2NjZmMmJhMjI1NWYzY2JhOTJiIn0sImlhdCI6MTc0NTcyNzk0M30.W8pgEEctU42gTMDR9P62qesGKmNq-4TiDnFpurFpez8"
       }
     });
-    const data = await response.json();
-    console.log(data);
 
     // Delete the note from frontend
     const newNotes = notes.filter((note) => { return note._id !== id });
@@ -66,14 +64,33 @@ const NoteState = (props) => {
   }
 
   // Edit a note
-  const editNote = (id, title, description, tag) => {
-    notes.forEach(note => {
-      if (note._id === id) {
-        note.title = title;
-        note.description = description;
-        note.tag = tag;
-      }
+  const editNote = async (id, title, description, tag) => {
+    // Frontend validation before sending the request to the backend
+    if (!title.trim() || !description.trim()) {
+      alert("Title and description are required!");
+      return; // Prevent sending a blank note
+    }
+
+    if (title.length < 5 || description.length < 5) {
+      alert("Both title and description must be at least 5 characters long.");
+      return;
+    }   
+    
+    // Update a note from backend
+    const response = await fetch(`${host}/api/notes/updatenote/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        "auth-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjgwYjE2NjZmMmJhMjI1NWYzY2JhOTJiIn0sImlhdCI6MTc0NTcyNzk0M30.W8pgEEctU42gTMDR9P62qesGKmNq-4TiDnFpurFpez8"
+      },
+      body: JSON.stringify({ title, description, tag })
     });
+
+    // Update the note in the frontend
+    const newNotes = notes.map((note) =>
+      note._id === id ? { ...note, title, description, tag } : note
+    );
+    setNotes(newNotes);
   }
 
   return (

@@ -13,10 +13,10 @@ const NoteItem = (props) => {
   return (
     <div className="col-md-4">
       <div className="card my-3">
-        <div className="card-body">
+        <div className="card-body px-3">
 
-          <div className="d-flex justify-content-between">
-            <h5 className="card-title fw-bold">{note.title}</h5>
+          <div className="d-flex justify-content-between gap-2">
+            <h5 className="card-title fw-bold text-wrap" style={{minWidth : "138px" }}>{note.title}</h5>
 
             <div className="d-flex gap-2">
               <i className="fa-solid fa-pen-to-square" style={{ color: "#1374be" }} onClick={() => { updateNote(note) }}></i>
@@ -24,7 +24,7 @@ const NoteItem = (props) => {
             </div>
           </div>
 
-          <p className="card-text">{note.description}</p>
+          <p className="card-text text-wrap" style={{minWidth : "138px" }}>{note.description}</p>
           <p className="card-text fst-italic fw-medium" style={{ fontSize: "14px", color: "#676767" }}>{note.tag}</p>
         </div>
       </div>
