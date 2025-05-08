@@ -25,7 +25,7 @@ const NoteItem = (props) => {
           </div>
 
           <p className="card-text text-wrap" style={{minWidth : "138px" }}>{note.description}</p>
-          <p className="card-text fst-italic fw-medium" style={{ fontSize: "14px", color: "#676767" }}>{note.tag}</p>
+          <p className="card-text fst-italic fw-medium" style={{ fontSize: "14px", color: "#676767" }}>{note.tag ? note.tag : "General"}</p>
         </div>
       </div>
     </div>
