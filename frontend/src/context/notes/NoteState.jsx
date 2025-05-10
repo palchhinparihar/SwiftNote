@@ -16,7 +16,7 @@ const NoteState = (props) => {
       }
     });
     const data = await response.json();
-    setNotes(data);
+    setNotes(data.notes);
   }
 
   // Add a note
@@ -44,7 +44,7 @@ const NoteState = (props) => {
     const data = await response.json();
 
     // Add that note in the frontend
-    setNotes(notes.concat(data));
+    setNotes(notes.concat(data.savedNote));
   }
 
   // Delete a note

@@ -39,7 +39,8 @@ router.post('/addnote', fetchuser, checkers, async (req, res) => {
 
   try {
     const note = new Note({
-      user: req.user.id, title, description, tag
+      user: req.user.id, title, description,
+      tag: tag || "General",
     });
 
     const savedNote = await note.save();

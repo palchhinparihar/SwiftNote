@@ -25,7 +25,7 @@ const UpdateNote = (props) => {
                 </div>
                 <div className="mb-3">
                   <label className="form-label" htmlFor="tag">Tag</label>
-                  <input type="text" className="form-control" id="etag" name="etag" value={note.etag ? note.etag : "General"} onChange={onChange} />
+                  <input type="text" className="form-control" id="etag" name="etag" value={note.etag} onChange={onChange} />
                 </div>
               </form>
             </div>
