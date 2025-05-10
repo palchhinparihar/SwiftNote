@@ -22,14 +22,14 @@ router.post('/createuser', checkers, async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     // Return a bad request
-    return res.status(400).json({ errors: errors.array() });
+    return res.status(400).json({ success: false, errors: errors.array() });
   }
 
   try {
     // Check if a user with same email exists or not
     let user = await User.findOne({ email: req.body.email });
     if (user) {
-      return res.status(400).json({ error: "Sorry, a user with this email already exists." });
+      return res.status(400).json({ success: false, error: "Sorry, a user with this email already exists." });
     }
 
     // Hashing the password with salt
@@ -52,12 +52,11 @@ router.post('/createuser', checkers, async (req, res) => {
 
     // Generate auth token
     const authToken = jwt.sign(payloadData, JWT_SECRET);
-
-    res.json({ authToken });
+    res.json({ success: true, authToken });
   } catch (err) {
     // Catch the error
     console.log(err.message);
-    res.status(500).json({ error: 'Interal Server Error', message: err.message });
+    res.status(500).json({ success: false, error: 'Interal Server Error', message: err.message });
   }
 });
 
@@ -73,7 +72,7 @@ router.post('/login', checkers, async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     // Return a bad request
-    return res.status(400).json({ errors: errors.array() });
+    return res.status(400).json({ success: false, errors: errors.array() });
   }
 
   const { email, password } = req.body;
@@ -82,13 +81,13 @@ router.post('/login', checkers, async (req, res) => {
     // Check if a user with the email exists or not
     let user = await User.findOne({ email });
     if (!user) {
-      return res.status(400).json({ error: "Please enter the correct credentials" });
+      return res.status(400).json({ success: false, error: "Please enter the correct credentials" });
     }
 
     // Password validation
     const passwordCompare = await bcrypt.compare(password, user.password);
     if (!passwordCompare) {
-      return res.status(400).json({ error: "Please enter the correct credentials" });
+      return res.status(400).json({ success: false, error: "Please enter the correct credentials" });
     }
 
     // Prepare payload for JWT
@@ -100,12 +99,11 @@ router.post('/login', checkers, async (req, res) => {
 
     // Generate auth token
     const authToken = jwt.sign(payloadData, JWT_SECRET);
-
-    res.json({ authToken });
+    res.json({ success: true, authToken });
   } catch (err) {
     // Catch the error
     console.log(err.message);
-    res.status(500).json({ error: 'Interal Server Error', message: err.message });
+    res.status(500).json({ success: false, error: 'Interal Server Error', message: err.message });
   }
 });
 
@@ -115,11 +113,11 @@ router.post('/getuser', fetchuser, async (req, res) => {
   try {
     // Fetch the user's details except password using the id
     const user = await User.findById(req.user.id).select("-password");
-    res.send(user);
+    res.json({ success: true, user })
   } catch (err) {
     // Catch the error
     console.log(err.message);
-    res.status(500).json({ error: 'Interal Server Error', message: err.message });
+    res.status(500).json({ success: false, error: 'Interal Server Error', message: err.message });
   }
 });
 

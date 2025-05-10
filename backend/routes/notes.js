@@ -17,11 +17,11 @@ router.get('/fetchallnotes', fetchuser, async (req, res) => {
   try {
     // Check if a note or notes exists or not
     let notes = await Note.find({ user: req.user.id });
-    res.json(notes);
+    res.json({ success: true, notes });
   } catch (err) {
     // Catch the error
     console.log(err.message);
-    res.status(500).json({ error: 'Interal Server Error', message: err.message });
+    res.status(500).json({ success: false, error: 'Interal Server Error', message: err.message });
   }
 });
 
@@ -32,9 +32,9 @@ router.post('/addnote', fetchuser, checkers, async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     // Return a bad request
-    return res.status(400).json({ errors: errors.array() });
+    return res.status(400).json({ success: false, errors: errors.array() });
   }
-  
+
   const { title, description, tag } = req.body;
 
   try {
@@ -43,11 +43,11 @@ router.post('/addnote', fetchuser, checkers, async (req, res) => {
     });
 
     const savedNote = await note.save();
-    res.json(savedNote);
+    res.json({ success: true, savedNote });
   } catch (err) {
     // Catch the error
     console.log(err.message);
-    res.status(500).json({ error: 'Interal Server Error', message: err.message });
+    res.status(500).json({ success: false, error: 'Interal Server Error', message: err.message });
   }
 });
 
@@ -66,21 +66,21 @@ router.put('/updatenote/:id', fetchuser, async (req, res) => {
     // Find the note to be updated
     let note = await Note.findById(req.params.id);
     if (!note) {
-      return res.status(404).send("Not Found!");
+      return res.status(400).json({ success: false, message: "Note not found!" });
     }
 
     // Check if the current user owns the note
     if (note.user.toString() !== req.user.id) {
-      return res.status(401).send("Not Allowed!");
+      return res.status(400).json({ success: false, message: "Not Allowed!" });
     }
 
     // Update the note and return the updated document
     note = await Note.findByIdAndUpdate(req.params.id, { $set: newNote }, { new: true });
-    res.json({ note });
+    res.json({ success: true, note });
   } catch (err) {
     // Handle server errors
     console.log(err.message);
-    res.status(500).json({ error: 'Internal Server Error', message: err.message });
+    res.status(500).json({ success: false, error: 'Internal Server Error', message: err.message });
   }
 });
 
@@ -91,21 +91,21 @@ router.delete('/deletenote/:id', fetchuser, async (req, res) => {
     // Find the note to be deleted
     let note = await Note.findById(req.params.id);
     if (!note) {
-      return res.status(404).send("Not Found!");
+      return res.status(400).json({ success: false, message: "Note not found!" });
     }
 
     // Check if the current user owns the note
     if (note.user.toString() !== req.user.id) {
-      return res.status(401).send("Not Allowed!");
+      return res.status(400).json({ success: false, message: "Note Allowed" });
     }
 
     // Delete the note
     note = await Note.findByIdAndDelete(req.params.id);
-    res.json({ "Success" : "Given Note has been deleted successfully!", note: note });
+    res.json({ success: true, message: "Given Note has been deleted successfully!", note: note });
   } catch (err) {
     // Handle server errors
     console.log(err.message);
-    res.status(500).json({ error: 'Internal Server Error', message: err.message });
+    res.status(500).json({ success: false, error: 'Internal Server Error', message: err.message });
   }
 });
 
