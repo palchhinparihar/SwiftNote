@@ -33,7 +33,7 @@ const Signup = () => {
 
     if (json.success) {
       // Save the auth token and redirect
-      localStorage.setItem('token', json.authtoken);
+      localStorage.setItem('token', json.authToken);
       navigate("/");
       showAlert("Account created successfully!", "success");
     }
@@ -47,7 +47,8 @@ const Signup = () => {
   }
 
   return (
-    <div className="container py-5">
+    <div className="container">
+      <h2 className="pt-5 pb-3">Sign up to use SwiftNote!</h2>
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
           <label htmlFor="name" className="form-label">Name:</label>

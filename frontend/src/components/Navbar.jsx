@@ -1,7 +1,20 @@
-import React from 'react'
-import { NavLink } from 'react-router-dom';
+import React, { useContext } from 'react';
+import { NavLink, useNavigate } from 'react-router-dom';
+import AlertContext from '../context/alert/AlertContext';
 
 const Navbar = (props) => {
+  const context = useContext(AlertContext);
+  const { showAlert } = context;
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    showAlert("Logged out successfully!", "success");
+    setTimeout(() => {
+      navigate("/login");
+    }, 500);
+  }
+  
   return (
     <nav className="navbar navbar-expand-lg bg-body-tertiary">
       <div className="container-fluid">
@@ -18,10 +31,12 @@ const Navbar = (props) => {
               <NavLink className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`} to="/about">About</NavLink>
             </li>
           </ul>
-          <form className="d-flex" role="search">
-            <NavLink className="btn btn-primary mx-1" to="/login" role="button">Login</NavLink>
-            <NavLink className="btn btn-primary mx-1" to="/signup" role="button">Signup</NavLink>
-          </form>
+          {localStorage.getItem("token") ?
+            (<NavLink className="btn btn-primary mx-1" onClick={handleLogout} role="button">Logout</NavLink>) :
+            (<form className="d-flex" role="search">
+              <NavLink className="btn btn-primary mx-1" to="/login" role="button">Login</NavLink>
+              <NavLink className="btn btn-primary mx-1" to="/signup" role="button">Signup</NavLink>
+            </form>)}
         </div>
       </div>
     </nav>

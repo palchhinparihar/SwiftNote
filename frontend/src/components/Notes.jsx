@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import NoteContext from '../context/notes/NoteContext';
 import AlertContext from '../context/alert/AlertContext';
 
@@ -10,9 +11,14 @@ const Notes = () => {
   const { notes, getAllNotes, editNote } = context;
   const alertContext = useContext(AlertContext);
   const { showAlert } = alertContext;
+  const navigate = useNavigate();
 
   useEffect(() => {
-    getAllNotes();
+    if (localStorage.getItem("token")) {
+      getAllNotes();
+    } else {
+      navigate("/login");
+    }
   }, []);
 
   const ref = useRef();
