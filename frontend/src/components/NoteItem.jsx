@@ -1,13 +1,18 @@
 import React, { useContext } from 'react';
 import NoteContext from '../context/notes/NoteContext';
+import AlertContext from '../context/alert/AlertContext';
 
 const NoteItem = (props) => {
   const context = useContext(NoteContext);
   const { deleteNote } = context;
   const { note, updateNote } = props;
 
+  const alertContext = useContext(AlertContext);
+  const { showAlert } = alertContext;
+
   const handleDelete = () => {
     deleteNote(note._id);
+    showAlert("Deleted successfully!", "success");
   }
 
   return (

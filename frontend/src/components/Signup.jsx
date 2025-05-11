@@ -1,16 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import AlertContext from '../context/alert/AlertContext';
 
 const Signup = () => {
   const navigate = useNavigate();
+  const context = useContext(AlertContext);
+  const { showAlert } = context;
   const [credentials, setCredentials] = useState({ name: "", email: "", password: "", cpassword: "" });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const { name, email, password } = credentials;
+    const { name, email, password, cpassword } = credentials;
     if (name.length < 5 || password.length < 5) {
-      alert("Both name and password must be at least 5 characters long.");
+      showAlert("Both name and password must be at least 5 characters long!", "danger");
+      return;
+    }
+
+    if (password !== cpassword) {
+      showAlert("Passwords don't match!", "danger");
       return;
     }
     
@@ -27,9 +35,10 @@ const Signup = () => {
       // Save the auth token and redirect
       localStorage.setItem('token', json.authtoken);
       navigate("/");
+      showAlert("Account created successfully!", "success");
     }
     else {
-      alert("Invalid credentials");
+      showAlert("Invalid credentials!", "danger");
     }
   }
 

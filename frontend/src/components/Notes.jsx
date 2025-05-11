@@ -1,11 +1,15 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import NoteContext from '../context/notes/NoteContext';
+import AlertContext from '../context/alert/AlertContext';
+
 import NoteItem from './NoteItem';
 import UpdateNote from './UpdateNote';
 
 const Notes = () => {
   const context = useContext(NoteContext);
   const { notes, getAllNotes, editNote } = context;
+  const alertContext = useContext(AlertContext);
+  const { showAlert } = alertContext;
 
   useEffect(() => {
     getAllNotes();
@@ -25,6 +29,7 @@ const Notes = () => {
 
   const handleSubmit = (e) => {
     editNote(note.id, note.etitle, note.edescription, note.etag);
+    showAlert("Updated successfully!", "success");
   }
 
   return (
